@@ -274,6 +274,14 @@ class Camera(TensorWrapper):
         data = torch.stack([2 * cx, 2 * cy, fx, fy, cx, cy], -1)
         return cls(data)
 
+    @classmethod
+    @autocast
+    def from_calibration_matrix_st(cls, K: torch.Tensor):
+        cx, cy = K[..., 0, 2], K[..., 1, 2]
+        fx, fy = K[..., 0, 0], K[..., 1, 1]
+        data = torch.stack([cx, cy, fx, fy, cx, cy], -1)
+        return cls(data)
+
     @autocast
     def calibration_matrix(self):
         K = torch.zeros(
